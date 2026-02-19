@@ -2,7 +2,10 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
-use work.dot_types_pkg.all;
+library dot_core;
+use dot_core.dot_types_pkg.all;
+
+library mac_core;
 
 entity dot_engine is
   generic (
@@ -29,31 +32,10 @@ end dot_engine;
 
 architecture fsm of dot_engine is
 
-  -- currently hard-wire the ports to length 4.
   constant FIXED_VEC_LEN : integer := 4;
 
-  -- ceil_log2 expects positive; FIXED_VEC_LEN is constant 4 so cast is safe.
   constant MIN_OUT_W : integer :=
     A_WIDTH + B_WIDTH + integer(ceil_log2(positive(FIXED_VEC_LEN)));
-
-  component mac
-    generic (
-      A_WIDTH   : positive := 8;
-      B_WIDTH   : positive := 8;
-      OUT_WIDTH : positive := 17
-    );
-    port (
-      a         : in  signed (A_WIDTH-1 downto 0);
-      b         : in  signed (B_WIDTH-1 downto 0);
-      clk       : in  std_logic;
-      reset     : in  std_logic;
-      eof       : in  std_logic;
-      result    : out signed (OUT_WIDTH-1 downto 0);
-      valid_in  : in  std_logic;
-      valid_out : out std_logic;
-      enable    : in  std_logic
-    );
-  end component;
 
   type state_t is (
     S_IDLE,
@@ -87,9 +69,6 @@ architecture fsm of dot_engine is
 
 begin
 
-  ---------------------------------------------------------------------------
-  -- Compile-time / elaboration-time sanity checks
-  ---------------------------------------------------------------------------
   assert VEC_LEN = FIXED_VEC_LEN
     report "This version supports VEC_LEN=4 only (ports are fixed to 4)."
     severity failure;
@@ -98,9 +77,6 @@ begin
     report "OUT_WIDTH too small for dot-product width."
     severity failure;
 
-  ---------------------------------------------------------------------------
-  -- Batch-mode enable: always run
-  ---------------------------------------------------------------------------
   en_s <= '1';
 
   in_ready    <= '1' when state_r = S_IDLE else '0';
@@ -109,7 +85,7 @@ begin
   out_valid <= out_valid_r;
   result    <= sum_r;
 
-  mac0 : mac
+  mac0 : entity mac_core.mac
     generic map (
       A_WIDTH   => A_WIDTH,
       B_WIDTH   => B_WIDTH,
@@ -127,7 +103,7 @@ begin
       enable    => en_s
     );
 
-  mac1 : mac
+  mac1 : entity mac_core.mac
     generic map (
       A_WIDTH   => A_WIDTH,
       B_WIDTH   => B_WIDTH,
@@ -145,9 +121,6 @@ begin
       enable    => en_s
     );
 
-  ---------------------------------------------------------------------------
-  -- FSM + datapath
-  ---------------------------------------------------------------------------
   process(clk)
   begin
     if rising_edge(clk) then
@@ -222,10 +195,10 @@ begin
               out_valid_r <= '0';
               state_r     <= S_IDLE;
             end if;
-
         end case;
       end if;
     end if;
   end process;
 
 end fsm;
+
