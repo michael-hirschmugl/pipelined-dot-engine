@@ -5,18 +5,18 @@ pipelined MAC core.
 
 The repository contains:
 
--   A VHDL implementation (`vhdl` branch)
--   A SystemVerilog implementation (`systemverilog` branch)
+- A VHDL implementation (`vhdl` branch)
+- A SystemVerilog implementation (`systemverilog` branch)
 
 The `main` branch contains documentation and the common project
 structure.
 
 This project focuses on:
 
--   Clean RTL structure
--   Explicit library mapping
--   Reproducible simulation builds
--   Clear separation of IP core and integration logic
+- Clean RTL structure
+- Explicit library mapping
+- Reproducible simulation builds
+- Clear separation of IP core and integration logic
 
 ------------------------------------------------------------------------
 
@@ -31,20 +31,21 @@ The MAC core is included as a **Git submodule** under:
 
 The dot engine is responsible for:
 
--   Loading vector elements
--   Driving MAC instances
--   Collecting partial sums
--   Producing a final accumulated result
--   Managing valid/ready handshake
+- Loading vector elements
+- Driving MAC instances
+- Collecting partial sums
+- Producing a final accumulated result
+- Managing valid/ready handshake
 
-Detailed functional documentation of the dot engine itself is provided
-separately.
+📘 Detailed technical documentation is available here:
+
+**[Dot Engine Technical Reference](docs/dot_engine_technical_reference.md)**
 
 ------------------------------------------------------------------------
 
 ## Repository Structure
 
-``` bash
+```bash
 rtl/        # synthesizable RTL (dot engine + package)
 tb/         # testbench
 external/   # external dependencies (git submodules)
@@ -57,14 +58,14 @@ sim/        # simulator output (ignored by git)
 
 ## Branches
 
--   `main`\
-    Documentation and shared project structure only.
+- `main`  
+  Documentation and shared project structure only.
 
--   `vhdl`\
-    VHDL-2008 implementation (GHDL flow).
+- `vhdl`  
+  VHDL-2008 implementation (GHDL flow).
 
--   `systemverilog`\
-    SystemVerilog implementation.
+- `systemverilog`  
+  SystemVerilog implementation.
 
 ------------------------------------------------------------------------
 
@@ -72,15 +73,15 @@ sim/        # simulator output (ignored by git)
 
 The VHDL branch uses explicit library separation:
 
-  Library      Contents                    Location
-  ------------ --------------------------- -----------------
-  `dot_core`   dot_types_pkg, dot_engine   `sim/dot_core/`
-  `mac_core`   MAC core (submodule)        `sim/mac_core/`
-  `tb`         testbench                   `sim/tb/`
+| Library    | Contents                  | Location           |
+|------------|---------------------------|-------------------|
+| `dot_core` | dot_types_pkg, dot_engine | `sim/dot_core/`   |
+| `mac_core` | MAC core (submodule)      | `sim/mac_core/`   |
+| `tb`       | testbench                 | `sim/tb/`         |
 
 Generated files:
 
-``` bash
+```bash
 sim/
  ├── dot_core/dot_core-obj08.cf
  ├── mac_core/mac_core-obj08.cf
@@ -94,12 +95,12 @@ sim/
 
 ### Prerequisites
 
--   GHDL (VHDL-2008 capable)
--   Make
+- GHDL (VHDL-2008 capable)
+- Make
 
 ### Run simulation
 
-``` bash
+```bash
 make sim
 ```
 
@@ -109,7 +110,7 @@ Waveform output:
 
 ### Clean build artifacts
 
-``` bash
+```bash
 make clean
 ```
 
@@ -119,13 +120,13 @@ make clean
 
 After switching to `vhdl` or `systemverilog`:
 
-``` bash
+```bash
 git submodule update --init --recursive
 ```
 
 To fully clean the working tree when switching back to `main`:
 
-``` bash
+```bash
 git clean -ffd
 ```
 
@@ -135,5 +136,5 @@ git clean -ffd
 
 ## License
 
-GPL-2.0-or-later.\
+GPL-2.0-or-later.  
 See `LICENSE` file.
