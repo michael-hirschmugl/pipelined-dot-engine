@@ -1,10 +1,4 @@
----
-author:
-- DI Michael Hirschmugl
-title: Task Assignment
----
-
-# T1: Hardware Design -- The MAC Unit (Compute Core)
+# Hardware Design -- The MAC Unit (Compute Core)
 
 The design is written in VHDL (2008). Simulation was performed using GHDL 4.1.0. The project directory contains a build script that can be used to generate simulation results from the provided test bench.
 
@@ -45,7 +39,7 @@ The pipeline stages were chosen to minimize the amount of combinational logic be
 - Input: 2 input values per cycle
 - Output: 0.25 output values per cycle (result ready on every 4th cycle)
 
-# T2: System Integration -- Memory Mapped Interface
+# System Integration -- Memory Mapped Interface
 
 ## General
 
