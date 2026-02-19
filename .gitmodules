@@ -1,0 +1,4 @@
+[submodule "external/pipelined-mac-core"]
+	path = external/pipelined-mac-core
+	url = https://github.com/michael-hirschmugl/pipelined-mac-core.git
+	branch = systemverilog
